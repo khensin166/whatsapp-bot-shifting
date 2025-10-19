@@ -1,32 +1,50 @@
-// src/sendMessage.js
 import puppeteer from "puppeteer";
 
-export const sendMessage = async (phone, message) => {
+let browser, page;
+
+export const initWhatsApp = async () => {
   console.log("📲 Membuka WhatsApp Web...");
+  browser = await puppeteer.launch({
+  headless: false,
+  args: ["--no-sandbox", "--disable-setuid-sandbox"],
+  userDataDir: "./session", // folder untuk simpan session WA
+});
 
-  const browser = await puppeteer.launch({
-    headless: false, // HARUS false agar Chrome muncul
-    userDataDir: "./session", // agar login tersimpan
-  });
-
-  const page = await browser.newPage();
+  page = await browser.newPage();
   await page.goto("https://web.whatsapp.com");
-
   console.log("📱 Silakan scan QR code untuk login WhatsApp Web...");
 
-  // Tunggu hingga login berhasil (ada elemen sidebar chat)
-  await page.waitForSelector("#side", { timeout: 0 });
+  await page.waitForSelector("canvas", { timeout: 0 });
+  await page.waitForSelector("._3ndVb", { timeout: 0 }); // tanda login selesai
   console.log("✅ Login berhasil!");
+  return page;
+};
 
-  // Kirim pesan
-  const url = `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(message)}`;
+export const sendMessage = async (phone, message) => {
+  if (!page) {
+    console.log("⚠️ WhatsApp belum siap, inisialisasi dulu.");
+    return;
+  }
+
+  const url = `https://web.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(
+    message
+  )}&app_absent=0`;
+
   await page.goto(url);
+  await page.waitForSelector("div[title='Ketik pesan']", { timeout: 60000 });
+  await page.waitForTimeout(5000); // beri waktu chat loading
 
-  await page.waitForSelector("div[aria-label='Ketik pesan']");
-  await page.keyboard.press("Enter");
-  console.log(`✅ Pesan terkirim ke ${phone}: ${message}`);
+  // tekan tombol kirim menggunakan XPath yang kamu temukan
+  const sendButtonXPath =
+    "/html/body/div[1]/div/div/div[1]/div/div[3]/div/div[4]/div/footer/div[1]/div/span/div/div[2]/div/div[4]/div/span/div/div/div[1]";
+  const [sendButton] = await page.$x(sendButtonXPath);
 
-  // Jangan langsung tutup browser, biar bisa lihat hasilnya
-  await new Promise(resolve => setTimeout(resolve, 5000));
-  await browser.close();
+  if (sendButton) {
+    await sendButton.click();
+    console.log(
+      `✅ Pesan terkirim ke ${phone}: "${message}"`
+    );
+  } else {
+    console.log("⚠️ Tombol kirim tidak ditemukan!");
+  }
 };
