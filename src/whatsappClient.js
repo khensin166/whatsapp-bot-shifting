@@ -5,12 +5,14 @@ import { Server } from 'socket.io';
 
 // 1. Inisialisasi Server Socket.IO
 // Ini adalah "telepon" yang akan mengirim QR ke web Vue-mu
-const io = new Server(3001, {
+const PORT = process.env.PORT || 3001; 
+
+const io = new Server(PORT, { // <-- SEKARANG SUDAH DINAMIS
   cors: {
     origin: '*', // Izinkan koneksi dari web client-mu
   },
 });
-console.log('📡 Server Socket.IO berjalan di port 3001');
+console.log(`📡 Server Socket.IO berjalan di port ${PORT}`);
 
 // 2. Inisialisasi WhatsApp Client
 const client = new Client({
@@ -62,7 +64,7 @@ export const initWhatsApp = () => {
     }
     // === AKHIR DARI BLOK TAMBAHAN ===
   });
-  
+
   // Event saat koneksi terputus
   client.on('disconnected', (reason) => {
     console.log('⚠️ Client terputus:', reason);
