@@ -1,47 +1,28 @@
-// import "dotenv/config";
-// import { sendMessage } from "./sendMessage.js";
-// import { startScheduler } from "./scheduler.js";
-
-// console.log("🚀 Server running on port 3000");
-
-// // Jalankan scheduler otomatis
-// startScheduler();
-
-// // Kirim pesan otomatis saat startup (indikator bot aktif)
-// const notifyStartup = async () => {
-//   try {
-//     const phone = "6285264351660"; // Nomor kamu sendiri
-//     const message = "✅ Bot shift otomatis berhasil dijalankan di server!";
-//     await sendMessage(phone, message);
-//     console.log("📩 Notifikasi startup terkirim!");
-//   } catch (err) {
-//     console.error("⚠️ Gagal kirim notifikasi startup:", err.message);
-//   }
-// };
-
-// notifyStartup();
-
-import "dotenv/config";
+// src/index.js
 import { startScheduler } from "./scheduler.js";
-import { sendMessage } from "./sendMessage.js";
+// Impor KEDUA fungsi dari sendMessage.js
+import { initWhatsApp, sendMessage } from "./sendMessage.js"; 
 
-console.log("🚀 Server running on port 3000");
-startScheduler();
-
-const test = async () => {
+// Fungsi main untuk inisialisasi
+const main = async () => {
   try {
-    // Tunggu 5 detik setelah login sebelum kirim pesan
-    await new Promise((resolve) => setTimeout(resolve, 10000));
+    console.log("🚀 Memulai bot...");
+    // 1. Buka WhatsApp dan tunggu sampai login
+    await initWhatsApp(); 
+    console.log("✅ Bot siap menerima perintah.");
 
-    const phone = "6285264351660";
-    const message = "Halo! Ini tes otomatis dari bot shift 🚀";
-
+    // 2. Kirim notifikasi startup (opsional, tapi bagus)
     console.log("📤 Mengirim notifikasi startup...");
-    await sendMessage(phone, message);
+    await sendMessage("6285762535657", "✅ Bot shift otomatis berhasil dijalankan!");
     console.log("✅ Notifikasi startup terkirim!");
+
+    // 3. Jalankan scheduler harian
+    startScheduler();
+
   } catch (error) {
-    console.error("⚠️ Gagal kirim notifikasi startup:", error.message);
+    console.error("❌ Gagal memulai bot:", error.message);
   }
 };
 
-test();
+// Jalankan fungsi main
+main();
