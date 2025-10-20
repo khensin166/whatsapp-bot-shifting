@@ -1,22 +1,18 @@
 // src/index.js
 import { startScheduler } from "./scheduler.js";
-// Impor KEDUA fungsi dari sendMessage.js
-import { initWhatsApp, sendMessage } from "./sendMessage.js"; 
+// Impor dari file baru kita
+import { initWhatsApp } from "./whatsappClient.js"; 
 
-// Fungsi main untuk inisialisasi
-const main = async () => {
+const main = () => {
   try {
     console.log("🚀 Memulai bot...");
-    // 1. Buka WhatsApp dan tunggu sampai login
-    await initWhatsApp(); 
-    console.log("✅ Bot siap menerima perintah.");
 
-    // 2. Kirim notifikasi startup (opsional, tapi bagus)
-    console.log("📤 Mengirim notifikasi startup...");
-    await sendMessage("6285762535657", "✅ Bot shift otomatis berhasil dijalankan!");
-    console.log("✅ Notifikasi startup terkirim!");
+    // 1. Inisialisasi WhatsApp Client (ini akan berjalan selamanya)
+    // Fungsi ini sekarang juga otomatis menyalakan server Socket.IO
+    initWhatsApp(); 
 
-    // 3. Jalankan scheduler harian
+    // 2. Jalankan scheduler harian
+    // Scheduler akan mengimpor 'sendMessage' secara mandiri
     startScheduler();
 
   } catch (error) {

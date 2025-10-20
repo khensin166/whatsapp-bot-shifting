@@ -1,7 +1,8 @@
 // src/scheduler.js
 import cron from "node-cron";
 import { supabase } from "./supabase.js";
-import { sendMessage } from "./sendMessage.js";
+// import { sendMessage } from "./sendMessage.js";
+import { sendMessage } from "./whatsappClient.js";
 
 export function startScheduler() {
   console.log("🕒 Scheduler started...");
