@@ -1,0 +1,14 @@
+2025/10/21-01:30:38.921 3810 Reusing MANIFEST C:\Khensin\whatsapp-bot-shifting\session\Default\Local Storage\leveldb/MANIFEST-000001
+2025/10/21-01:30:38.930 3810 Recovering log #10
+2025/10/21-01:30:38.933 3810 Reusing old log C:\Khensin\whatsapp-bot-shifting\session\Default\Local Storage\leveldb/000010.log 
+2025/10/21-01:32:39.425 5318 Level-0 table #13: started
+2025/10/21-01:32:39.446 5318 Level-0 table #13: 14526 bytes OK
+2025/10/21-01:32:39.451 5318 Delete type=0 #10
+2025/10/21-01:32:39.452 5318 Compacting 4@0 + 0@1 files
+2025/10/21-01:32:39.459 5318 Generated table #14@0: 86 keys, 11796 bytes
+2025/10/21-01:32:39.460 5318 Compacted 4@0 + 0@1 files => 11796 bytes
+2025/10/21-01:32:39.461 5318 compacted to: files[ 0 1 0 0 0 0 0 ]
+2025/10/21-01:32:39.462 5318 Delete type=2 #3
+2025/10/21-01:32:39.462 5318 Delete type=2 #6
+2025/10/21-01:32:39.462 5318 Delete type=2 #9
+2025/10/21-01:32:39.462 5318 Delete type=2 #13
