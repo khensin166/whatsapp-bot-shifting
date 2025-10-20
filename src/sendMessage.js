@@ -7,7 +7,7 @@ let browser, page;
 export const initWhatsApp = async () => {
   console.log("📲 Membuka WhatsApp Web...");
   browser = await puppeteer.launch({
-    headless: false, 
+    headless: true, 
     args: [
       "--no-sandbox",
       "--disable-setuid-sandbox",
