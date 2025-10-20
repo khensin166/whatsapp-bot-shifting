@@ -10,6 +10,6 @@ aptPkgs = [
   "libcups2",
   "libgtk-3-0",
   "libgbm-dev",
-  "libasound2",
+  "libasound2t64",  # <-- INI DIA PERUBAHANNYA
   "libgobject-2.0-0"
 ]
