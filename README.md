@@ -63,6 +63,7 @@ Cuplikan kode
 
 # Folder sesi WhatsApp
 /session/
+![alt text](image.png)
 
 # File environment
 .env
@@ -111,3 +112,6 @@ Buka tab Settings.
 Scroll ke bagian Networking.
 
 Klik **Generate Domain
+![alt text]({60B3AA9B-0072-4F66-81E4-0F14AFEA06E5}.png)
+![alt text]({AAA6D6CC-2855-4F9A-8960-B0E4F20AA2AB}.png)
+![alt text]({4F068CD5-2093-43D3-8365-D402C979FB5B}.png)

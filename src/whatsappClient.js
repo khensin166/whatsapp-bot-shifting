@@ -45,24 +45,34 @@ export const initWhatsApp = () => {
     console.log('✅ WhatsApp Client siap!');
     io.emit('status', 'WhatsApp Terhubung!');
 
-    // 2. TAMBAHKAN BLOK INI UNTUK KIRIM PESAN OTOMATIS
-    try {
-      console.log('📤 Mengirim notifikasi startup...');
-      // Ganti dengan nomor HP kamu sendiri
-      const phone = "6285762535657"; 
-      const message = "✅ Bot shift otomatis berhasil dijalankan & terhubung!";
+    // 2. KIRIM PESAN OTOMATIS KE BANYAK NOMOR
+    console.log('📤 Mengirim notifikasi startup ke admin...');
       
-      // Format nomor untuk whatsapp-web.js
-      const chatId = `${phone}@c.us`;
-      
-      // Langsung gunakan 'client' untuk mengirim pesan
-      await client.sendMessage(chatId, message);
-      console.log('✅ Notifikasi startup terkirim!');
+    // 1. Tentukan daftar nomor admin dalam sebuah array
+    const adminNumbers = [
+      "6285264351660",
+      "6282173230659" // <-- Ganti dengan nomor keduamu
+      // Tambahkan nomor lain di sini jika perlu
+    ];
+    
+    const message = "✅ Bot shift otomatis berhasil dijalankan & terhubung!";
 
-    } catch (err) {
-      console.error('❌ Gagal kirim notifikasi startup:', err.message);
+    // 2. Loop setiap nomor dan kirim pesan
+    for (const phone of adminNumbers) {
+      try {
+        const chatId = `${phone}@c.us`;
+        await client.sendMessage(chatId, message);
+        console.log(`✅ Notifikasi startup terkirim ke ${phone}`);
+        
+        // 3. (PENTING) Beri jeda 2 detik antar pesan agar tidak di-spam
+        // 2000 milidetik = 2 detik
+        await new Promise(resolve => setTimeout(resolve, 2000)); 
+        
+      } catch (err) {
+        // Jika 1 nomor gagal, log error dan lanjut ke nomor berikutnya
+        console.error(`❌ Gagal kirim notifikasi startup ke ${phone}:`, err.message);
+      }
     }
-    // === AKHIR DARI BLOK TAMBAHAN ===
   });
 
   // Event saat koneksi terputus
