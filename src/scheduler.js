@@ -57,7 +57,7 @@ const syncGoogleSheetToSupabase = async () => {
         const userId = userMap.get(sheetRow.name.trim().toLowerCase()); 
         
         if (!userId) {
-          console.warn(`⚠️ User '${sheetRow.name.trim()}' tidak ditemukan di DB.`);
+          // console.warn(`⚠️ User '${sheetRow.name.trim()}' tidak ditemukan di DB.`);
           return null;
         }
         
