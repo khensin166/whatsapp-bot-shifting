@@ -1,5 +1,5 @@
 // src/index.js
-import { startScheduler } from "./scheduler.js";
+// import { startScheduler } from "./scheduler.js";
 // Impor dari file baru kita
 import { initWhatsApp } from "./whatsappClient.js"; 
 
@@ -13,7 +13,7 @@ const main = () => {
 
     // 2. Jalankan scheduler harian
     // Scheduler akan mengimpor 'sendMessage' secara mandiri
-    startScheduler();
+    // startScheduler();
 
   } catch (error) {
     console.error("❌ Gagal memulai bot:", error.message);

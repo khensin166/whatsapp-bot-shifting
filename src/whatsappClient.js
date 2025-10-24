@@ -2,6 +2,7 @@
 import pkg from 'whatsapp-web.js';
 const { Client, LocalAuth } = pkg;
 import { Server } from 'socket.io';
+import { startScheduler } from './scheduler.js';
 
 // 1. Inisialisasi Server Socket.IO
 // Ini adalah "telepon" yang akan mengirim QR ke web Vue-mu
@@ -51,8 +52,7 @@ export const initWhatsApp = () => {
     // 1. Tentukan daftar nomor admin dalam sebuah array
     const adminNumbers = [
       "6285264351660",
-      "6282173230659" // <-- Ganti dengan nomor keduamu
-      // Tambahkan nomor lain di sini jika perlu
+      "6282173230659" 
     ];
     
     const message = "✅ Bot shift otomatis berhasil dijalankan & terhubung!";
@@ -73,6 +73,11 @@ export const initWhatsApp = () => {
         console.error(`❌ Gagal kirim notifikasi startup ke ${phone}:`, err.message);
       }
     }
+    
+      // Setelah WA siap dan notif terkirim, BARU jalankan scheduler
+      console.log("-> 🏁 Memulai Scheduler sekarang setelah WA siap...");
+      startScheduler(); 
+      // --- AKHIR DARI PERUBAHAN ---
   });
 
   // Event saat koneksi terputus
