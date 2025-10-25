@@ -137,6 +137,10 @@ const checkReminders = async () => {
     for (const activity of activities) {
       console.log(`🔔 Aktivitas ditemukan: ${activity.activity_name} (Shift ${activity.shift_type})`);
 
+      // --- TAMBAHAN LOGGING 1 ---
+      console.log(` -> Mencari user dengan shift ${activity.shift_type} pada ${currentDate}...`);
+      // --- AKHIR LOGGING 1 ---
+
       // 3. ...cari semua user yang shift-nya cocok HARI INI
       // --- PERBAIKAN UNTUK ERROR 1 (jaga-jaga) ---
       // Pastikan join ke 'User' menggunakan 'userId'
@@ -147,12 +151,28 @@ const checkReminders = async () => {
         .eq('shift_type', activity.shift_type);
 
       if (shiftError) throw shiftError;
-      if (!usersOnShift || usersOnShift.length === 0) continue;
+      // --- TAMBAHAN LOGGING 2 & PERBAIKAN KONDISI ---
+      if (!usersOnShift || usersOnShift.length === 0) {
+          console.log(` -> Tidak ada user yang ditemukan untuk shift ${activity.shift_type} hari ini.`);
+          continue; 
+      } else {
+          console.log(` -> Ditemukan ${usersOnShift.length} user.`);
+      }
+      // --- AKHIR LOGGING 2 ---
 
       // 4. ...kirim pesan ke setiap user yang shift-nya cocok
       for (const shift of usersOnShift) {
         const user = shift.User;
-        if (!user || !user.phone_number) continue;
+        // --- TAMBAHAN LOGGING 3 & PERBAIKAN KONDISI ---
+        if (!user) {
+            console.log(` -> User data tidak lengkap untuk shift ini.`);
+            continue;
+        }
+        if (!user.phone_number) {
+            console.log(` -> User ${user.name} dilewati karena phone_number kosong.`);
+            continue; 
+        }
+        // --- AKHIR LOGGING 3 ---
 
         // 5. Cek apakah sudah pernah kirim log hari ini
         const todayStart = `${currentDate}T00:00:00.000Z`;
@@ -183,7 +203,9 @@ Catatan: ${activity.note || '-'}`;
             .insert({ userId: user.id, activityId: activity.id }); // Ganti ke userId & activityId
             
         } else {
-          console.log(`Skipping ${user.name}, notifikasi sudah terkirim.`);
+          // --- TAMBAHAN LOGGING 4 ---
+          console.log(` -> Skipping ${user.name}, notifikasi sudah terkirim hari ini (Log ID: ${existingLog[0].id}).`);
+          // --- AKHIR LOGGING 4 ---
         }
       }
     }
