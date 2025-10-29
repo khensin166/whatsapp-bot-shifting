@@ -34,7 +34,12 @@ const syncGoogleSheetToSupabase = async () => {
 
     // --- PERBAIKAN UNTUK ERROR 2 ---
     // Buat "peta" dengan nama lowercase: { "kenan tomfie bukit": "uuid-..." }
-    const userMap = new Map(users.map(u => [u.name.toLowerCase(), u.id]));
+    // const userMap = new Map(users.map(u => [u.name.toLowerCase(), u.id]));
+    const userMap = new Map(
+      users
+        .filter(u => u.name) // Hanya proses user yang punya nama
+        .map(u => [u.name.toLowerCase(), u.id])
+    );
 
     // --- TAMBAHAN LOGGING 2 ---
     // Tampilkan beberapa contoh mapping untuk debug
