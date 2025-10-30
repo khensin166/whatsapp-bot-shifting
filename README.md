@@ -1,17 +1,28 @@
-# whatsapp-bot-shifting
-whatsapp-bot-shifting
+# 💬 WhatsApp Bot Shifting
 
-🚀 Panduan Deploy ke Railway ?
-Berikut adalah langkah-langkah untuk mendeploy bot WhatsApp ini ke Railway, lengkap dengan semua konfigurasi yang diperlukan.
+Bot WhatsApp otomatis yang dapat dijalankan di **Railway**.  
+Dokumen ini berisi panduan lengkap untuk melakukan **deploy** ke Railway beserta konfigurasi yang dibutuhkan.
 
-1. Persiapan File Konfigurasi
-Pastikan file-file berikut ada dan sudah benar di dalam proyek kamu sebelum di-push ke GitHub.
+---
 
-A. package.json (Start Script)
-Pastikan start script kamu menggunakan node (bukan nodemon) dan tidak menyertakan --env-file. Railway akan menyuntikkan variables secara otomatis.
+## 🚀 Panduan Deploy ke Railway
 
-JSON
+Berikut langkah-langkah untuk men-deploy bot WhatsApp ini ke Railway.
 
+---
+
+### 1. 🧩 Persiapan File Konfigurasi
+
+Pastikan file berikut sudah ada dan benar sebelum melakukan push ke GitHub.
+
+---
+
+#### A. `package.json` (Start Script)
+
+Pastikan script **start** menggunakan `node` (bukan `nodemon`) dan **tidak** menyertakan `--env-file`.  
+Railway akan otomatis menyuntikkan environment variables.
+
+```json
 "scripts": {
   "start": "node src/index.js",
   "dev": "nodemon --env-file=.env src/index.js"
@@ -19,12 +30,15 @@ JSON
 "engines": {
   "node": ">=20.0.0"
 }
-B. nixpacks.toml (Dependensi Sistem)
-Buat file ini di folder root proyek untuk meng-install library sistem yang dibutuhkan oleh Puppeteer (Chromium).
 
-Ini, TOML
+```
 
-# nixpacks.toml
+--- 
+#### B. nixpacks.toml
+
+Buat file nixpacks.toml di folder root proyek.
+File ini akan menginstal library sistem yang dibutuhkan oleh Whatsapp.js.
+---
 
 [phases.setup]
 # Menambahkan library sistem yang dibutuhkan oleh Puppeteer/Chromium
@@ -39,79 +53,77 @@ aptPkgs = [
   "libasound2t64",
   "libgobject-2.0-0"
 ]
-C. src/whatsappClient.js (Port Dinamis)
-Pastikan server Socket.IO kamu menggunakan process.env.PORT yang diberikan oleh Railway.
 
-JavaScript
 
-// src/whatsappClient.js
-import { Server } from 'socket.io';
-
-// Baca port dari Railway, jika tidak ada (lokal), gunakan 3001
-const PORT = process.env.PORT || 3001; 
-
-const io = new Server(PORT, {
-  cors: {
-    origin: '*', // Sesuaikan di produksi nanti
-  },
-});
-console.log(`📡 Server Socket.IO berjalan di port ${PORT}`);
-D. .gitignore (Keamanan Sesi)
+#### C. .gitignore (Keamanan Sesi)
 Pastikan kamu mengabaikan folder session agar tidak ter-push ke GitHub.
 
 Cuplikan kode
 
 # Folder sesi WhatsApp
 /session/
-![alt text](image.png)
 
 # File environment
 .env
 
 # Folder dependensi
 /node_modules/
-2. Setup di Dashboard Railway
+
+
+### 2. Setup di Dashboard Railway
 Setelah semua kode di-push ke GitHub:
 
-Buat Proyek: Buat proyek baru di Railway dan hubungkan ke repositori GitHub kamu.
+Setelah kode di-push ke GitHub, lanjutkan langkah-langkah berikut:
 
-Atur Builder:
+🔹 1. Buat Proyek
 
-Buka tab Settings di layanan (service) kamu.
+Buka Railway
 
-Scroll ke bagian Build.
+Klik New Project
 
-Pastikan Builder diatur ke Nixpacks.
+Hubungkan ke repository GitHub kamu
 
-Tambahkan Variables:
+🔹 2. Atur Builder
 
-Buka tab Variables.
+Masuk ke tab Settings di service kamu
 
-Tambahkan semua environment variables kamu, terutama:
+Scroll ke bagian Build
 
-SUPABASE_URL: (URL Supabase kamu)
+Pastikan Builder diatur ke Nixpacks
 
-SUPABASE_KEY: (Kunci Supabase kamu)
+🔹 3. Tambahkan Environment Variables
 
-Tambahkan Volume (Wajib):
+Buka tab Variables
 
-Buka tab Settings.
+Tambahkan semua environment variable, terutama:
 
-Scroll ke bagian Volumes.
+SUPABASE_URL → URL proyek Supabase kamu
 
-Klik Add Volume (atau New Volume).
+SUPABASE_KEY → Kunci API Supabase kamu
 
-Isi Mount Path dengan: ./session
+🔹 4. Tambahkan Volume (Wajib)
 
-Klik di luar kotak (atau tekan Enter). Ini akan tersimpan otomatis.
+Buka tab Settings
 
-Buat URL Publik:
+Scroll ke bagian Volumes
 
-Buka tab Settings.
+Klik Add Volume (atau New Volume)
 
-Scroll ke bagian Networking.
+Isi Mount Path dengan:
 
-Klik **Generate Domain
+./session
+![alt text](image.png)
+
+Tekan Enter untuk menyimpan
+
+🔹 5. Buat URL Publik
+
+Masuk ke tab Settings
+
+Scroll ke bagian Networking
+
+Klik Generate Domain
+(Railway akan membuat domain publik untuk aplikasi kamu)
 ![alt text]({60B3AA9B-0072-4F66-81E4-0F14AFEA06E5}.png)
 ![alt text]({AAA6D6CC-2855-4F9A-8960-B0E4F20AA2AB}.png)
 ![alt text]({4F068CD5-2093-43D3-8365-D402C979FB5B}.png)
