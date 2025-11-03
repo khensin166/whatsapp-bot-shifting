@@ -51,8 +51,8 @@ export const initWhatsApp = () => {
       
     // 1. Tentukan daftar nomor admin dalam sebuah array
     const adminNumbers = [
-      "6285264351660",
-      "6282173230659" 
+      "6285264351660"
+      // "6282173230659" 
     ];
     
     const message = "✅ Bot shift otomatis berhasil dijalankan & terhubung!";

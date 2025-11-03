@@ -25,8 +25,8 @@ export const fetchShiftData = async () => {
 
   const currentTabName = `${monthName}'${shortYear}`;
 
-  // Ambil range yang lebar, dimulai dari A4 untuk menangkap KEDUA baris header
-  const range = `${currentTabName}!A4:AZ100`;
+  // --- PERBAIKAN 1: Baca range mulai dari BARIS 3 ---
+  const range = `${currentTabName}!A3:AZ100`;
 
   console.log(`Mencoba membaca dari tab: ${currentTabName} (Range: ${range})`);
 
@@ -37,26 +37,26 @@ export const fetchShiftData = async () => {
     });
 
     const rows = response.data.values;
-    // --- PERBAIKAN LOGIKA PARSING HEADER ---
-    if (!rows || rows.length < 3) { // Butuh 2 baris header + 1 baris data
-      console.log('Data sheet tidak lengkap (kurang dari 3 baris).');
+    // --- PERBAIKAN 2: Logika Parser Header Ganda ---
+    if (!rows || rows.length < 4) { // Butuh 3 baris header (3,4,5) + 1 baris data
+      console.log('Data sheet tidak lengkap (kurang dari 4 baris).');
       return [];
     }
 
-    // Pisahkan baris header
-    // KITA HANYA BUTUH BARIS 4
-    const headerRow = rows[0]; // Ini adalah Sheet Row 4 (berisi "Nama" DAN "1", "2"...)
-    // const dayNameRow = rows[1]; // Ini Sheet Row 5 (Fungsi, Sab, Min... KITA ABAIKAN)
-    const userDataRows = rows.slice(2); // Data user dimulai dari Sheet Row 6
+    // Pisahkan TIGA baris header
+    const staticHeaderRow = rows[0]; // Ini adalah Sheet Row 3 (berisi "Nama", "PN"...)
+    const dateHeaderRow = rows[1];   // Ini adalah Sheet Row 4 (berisi "1", "2", "3"...)
+    // const dayNameRow = rows[2];    // Ini Sheet Row 5 (Fungsi, Sab, Min... KITA ABAIKAN)
+    const userDataRows = rows.slice(3);  // Data user dimulai dari Sheet Row 6 (index 3)
 
-    // 1. Cari index "Nama" di Baris 4
-    const nameColIndex = headerRow.findIndex(
+    // 1. Cari index "Nama" di Baris 3
+    const nameColIndex = staticHeaderRow.findIndex(
       (header) => String(header).trim().toLowerCase() === 'nama'
     );
 
     if (nameColIndex === -1) {
       throw new Error(
-        `Tidak dapat menemukan header 'Nama' di baris 4 pada tab '${currentTabName}'.`
+        `Tidak dapat menemukan header 'Nama' di baris 3 pada tab '${currentTabName}'.`
       );
     }
     console.log(
@@ -64,7 +64,7 @@ export const fetchShiftData = async () => {
     );
 
     // 2. Cari index "1" di Baris 4
-    const dateStartIndex = headerRow.findIndex(
+    const dateStartIndex = dateHeaderRow.findIndex(
       (header) => String(header).trim() === '1'
     );
 
@@ -88,11 +88,11 @@ export const fetchShiftData = async () => {
       // Loop menggunakan header tanggal dari Baris 4
       for (
         let colIndex = dateStartIndex;
-        colIndex < headerRow.length; // Loop sepanjang baris header
+        colIndex < dateHeaderRow.length; // Loop sepanjang baris tanggal
         colIndex++
       ) {
-        const day = headerRow[colIndex]; // Ambil 'day' dari Row 4
-        const shiftType = row[colIndex]; // Ambil 'shiftType' dari baris user
+        const day = dateHeaderRow[colIndex]; // Ambil 'day' dari Row 4
+        const shiftType = row[colIndex];     // Ambil 'shiftType' dari baris user
 
         if (
           day &&
